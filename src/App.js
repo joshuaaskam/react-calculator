@@ -14,6 +14,21 @@ export const ACTIONS = {
 function reducer(state, {type, payload}){
   switch(type){
     case ACTIONS.ADD_DIGIT:
+      // Do not allow redundant 0s to be added
+      if(payload.digit === "0" && state.currentOperand === "0") {
+        return state
+      }
+      // Replace a single 0 with the digit
+      if(state.currentOperand === "0" && payload.digit !== "0" && payload.digit !== "."){
+        return{
+          ...state,
+          currentOperand: payload.digit
+        }
+      }
+      // Do not allow multiple decimals in a number
+      if(payload.digit === "." && state.currentOperand.includes(".")) {
+        return state
+      }
       return{
         ...state,
         currentOperand: `${state.currentOperand || ""}${payload.digit}`
